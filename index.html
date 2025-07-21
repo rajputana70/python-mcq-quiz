@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python MCQ Quiz</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #141E30, #243B55);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .quiz-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-width: 700px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #ffd700;
+    }
+
+    #question {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      white-space: pre-wrap;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .option-btn {
+      background-color: #444;
+      border: none;
+      color: white;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
+      transition: 0.3s;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .option-btn:hover {
+      background-color: #0088cc;
+    }
+
+    .option-btn.correct {
+      background-color: green;
+    }
+
+    .option-btn.incorrect {
+      background-color: red;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .nav-buttons button {
+      background-color: #ffd700;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #result {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 1.2rem;
+      color: #00ffcc;
+    }
+
+    #final-score {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ff66cc;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Python MCQ Quiz</h1>
+    <div id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="nav-buttons">
+      <button onclick="prevQuestion()">Previous</button>
+      <button onclick="nextQuestion()">Next</button>
+    </div>
+    <div id="result"></div>
+    <div id="final-score"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: `1. What is the output of the following code?\n\nx = 10\ny = 3\nprint(x % y)`,
+        options: ["1", "2", "3", "0"],
+        answer: "1"
+      },
+      {
+        question: `2. Find the output of this code:\n\nmy_list = [1, 2, 3]\nmy_list.append([4,5])\nprint(len(my_list))`,
+        options: ["3", "5", "4", "2"],
+        answer: "4"
+      }
+      // Add more questions here
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answeredQuestions = 0;
+
+    const questionBox = document.getElementById("question");
+    const optionsBox = document.getElementById("options");
+    const resultBox = document.getElementById("result");
+    const finalScoreBox = document.getElementById("final-score");
+
+    function showQuestion(index) {
+      const q = quizData[index];
+      questionBox.textContent = q.question;
+      optionsBox.innerHTML = "";
+      resultBox.textContent = "";
+      finalScoreBox.textContent = "";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option-btn";
+        btn.onclick = () => checkAnswer(btn, q.answer);
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(button, correctAnswer) {
+      const buttons = document.querySelectorAll(".option-btn");
+      buttons.forEach(btn => btn.disabled = true);
+      if (button.textContent === correctAnswer) {
+        button.classList.add("correct");
+        score++;
+      } else {
+        button.classList.add("incorrect");
+        buttons.forEach(btn => {
+          if (btn.textContent === correctAnswer) {
+            btn.classList.add("correct");
+          }
+        });
+      }
+      if (answeredQuestions < quizData.length) answeredQuestions++;
+      resultBox.textContent = `Score: ${score} / ${quizData.length}`;
+
+      if (answeredQuestions === quizData.length) {
+        finalScoreBox.textContent = `🎉 Final Result: You scored ${score} out of ${quizData.length}! 🎉`;
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+      }
+    }
+
+    showQuestion(currentQuestion);
+  </script>
+</body>
+</html>
