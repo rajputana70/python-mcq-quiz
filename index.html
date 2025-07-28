@@ -8,7 +8,8 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px;
-      background: linear-gradient(to right, #f2f2f2, #d9e2ec);
+      background: linear-gradient(to right, #f0f4ff, #c6e2ff);
+      color: #333;
     }
     .quiz-container {
       max-width: 700px;
@@ -16,15 +17,15 @@
       background-color: #ffffff;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
     .option-btn {
       display: block;
       margin: 10px 0;
       padding: 12px;
       width: 100%;
-      background-color: #f0f4f8;
-      border: 2px solid #cbd5e0;
+      background-color: #eaf2fb;
+      border: 2px solid #b3cde0;
       border-radius: 6px;
       cursor: pointer;
       text-align: left;
@@ -32,7 +33,7 @@
       transition: all 0.2s ease-in-out;
     }
     .option-btn:hover {
-      background-color: #e2e8f0;
+      background-color: #d6e6f2;
     }
     .option-btn.correct {
       background-color: #c6f6d5;
@@ -58,10 +59,29 @@
     #result.incorrect {
       color: #e53e3e;
     }
+    #question-number {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #555;
+    }
+    #celebration {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 22px;
+      color: #2b6cb0;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
   <div class="quiz-container">
+    <div id="question-number"></div>
     <h2 id="question"></h2>
     <div id="options"></div>
     <div id="result"></div>
@@ -69,60 +89,21 @@
       <button onclick="prevQuestion()">Previous</button>
       <button onclick="nextQuestion()">Next</button>
     </div>
+    <div id="celebration">🎉 Congratulations! You've completed the quiz! 🎉</div>
   </div>
 
   <script>
     const questions = [
-      {
-        question: "What is the result of chr(65)?",
-        options: ["A", "a", "65", "Error"],
-        answer: "A"
-      },
-      {
-        question: "What is the output of len('hello')?",
-        options: ["4", "5", "6", "Error"],
-        answer: "5"
-      },
-      {
-        question: "Which of these is a Python keyword?",
-        options: ["def", "define", "function", "fun"],
-        answer: "def"
-      },
-      {
-        question: "What does the 'append()' method do?",
-        options: ["Adds item to end", "Removes item", "Sorts list", "Reverses list"],
-        answer: "Adds item to end"
-      },
-      {
-        question: "What is the output of [1,2,3] * 2?",
-        options: ["[1,2,3,1,2,3]", "[2,4,6]", "Error", "[1,2,3]*2"],
-        answer: "[1,2,3,1,2,3]"
-      },
-      {
-        question: "What method is used to sort a list in place?",
-        options: ["sort()", "sorted()", "order()", "arrange()"],
-        answer: "sort()"
-      },
-      {
-        question: "Which data type is immutable?",
-        options: ["List", "Set", "Dictionary", "Tuple"],
-        answer: "Tuple"
-      },
-      {
-        question: "How do you create a function in Python?",
-        options: ["def function():", "create function():", "function() {}", "func function():"],
-        answer: "def function():"
-      },
-      {
-        question: "Which of the following is a tuple?",
-        options: ["(1, 2, 3)", "[1, 2, 3]", "{1, 2, 3}", "<1, 2, 3>"],
-        answer: "(1, 2, 3)"
-      },
-      {
-        question: "What does the 'break' keyword do in a loop?",
-        options: ["Exits the loop", "Skips the next iteration", "Restarts the loop", "Pauses the loop"],
-        answer: "Exits the loop"
-      }
+      { question: "What is the result of chr(65)?", options: ["A", "a", "65", "Error"], answer: "A" },
+      { question: "What is the output of len('hello')?", options: ["4", "5", "6", "Error"], answer: "5" },
+      { question: "Which of these is a Python keyword?", options: ["def", "define", "function", "fun"], answer: "def" },
+      { question: "What does the 'append()' method do?", options: ["Adds item to end", "Removes item", "Sorts list", "Reverses list"], answer: "Adds item to end" },
+      { question: "What is the output of [1,2,3] * 2?", options: ["[1,2,3,1,2,3]", "[2,4,6]", "Error", "[1,2,3]*2"], answer: "[1,2,3,1,2,3]" },
+      { question: "What method is used to sort a list in place?", options: ["sort()", "sorted()", "order()", "arrange()"], answer: "sort()" },
+      { question: "Which data type is immutable?", options: ["List", "Set", "Dictionary", "Tuple"], answer: "Tuple" },
+      { question: "How do you create a function in Python?", options: ["def function():", "create function():", "function() {}", "func function():"], answer: "def function():" },
+      { question: "Which of the following is a tuple?", options: ["(1, 2, 3)", "[1, 2, 3]", "{1, 2, 3}", "<1, 2, 3>"], answer: "(1, 2, 3)" },
+      { question: "What does the 'break' keyword do in a loop?", options: ["Exits the loop", "Skips the next iteration", "Restarts the loop", "Pauses the loop"], answer: "Exits the loop" }
     ];
 
     let currentQuestion = 0;
@@ -130,10 +111,18 @@
     function loadQuestion() {
       const questionEl = document.getElementById("question");
       const optionsEl = document.getElementById("options");
+      const numberEl = document.getElementById("question-number");
+      const resultEl = document.getElementById("result");
+      const celebrationEl = document.getElementById("celebration");
+
       const q = questions[currentQuestion];
 
-      questionEl.textContent = `${currentQuestion + 1}. ${q.question}`;
+      numberEl.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+      questionEl.textContent = q.question;
       optionsEl.innerHTML = "";
+      resultEl.textContent = "";
+      resultEl.className = "";
+      celebrationEl.style.display = "none";
 
       q.options.forEach(option => {
         const btn = document.createElement("button");
@@ -142,9 +131,6 @@
         btn.onclick = () => checkAnswer(btn, q.answer);
         optionsEl.appendChild(btn);
       });
-
-      document.getElementById("result").textContent = "";
-      document.getElementById("result").className = "";
     }
 
     function checkAnswer(btn, correct) {
@@ -168,6 +154,8 @@
       if (currentQuestion < questions.length - 1) {
         currentQuestion++;
         loadQuestion();
+      } else {
+        document.getElementById("celebration").style.display = "block";
       }
     }
 
