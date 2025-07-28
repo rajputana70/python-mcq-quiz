@@ -7,75 +7,93 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
-      background: linear-gradient(to right, #f0f4ff, #c6e2ff);
-      color: #333;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
     }
     .quiz-container {
       max-width: 700px;
-      margin: auto;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      margin: 50px auto;
+      background-color: #1e2a38;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    h2, #question-number {
+      color: #00e6e6;
     }
     .option-btn {
       display: block;
-      margin: 10px 0;
-      padding: 12px;
+      margin: 12px 0;
+      padding: 14px;
       width: 100%;
-      background-color: #eaf2fb;
-      border: 2px solid #b3cde0;
-      border-radius: 6px;
+      background-color: #2c3e50;
+      border: 2px solid #34495e;
+      border-radius: 8px;
       cursor: pointer;
       text-align: left;
       font-size: 16px;
-      transition: all 0.2s ease-in-out;
+      color: #fff;
+      transition: all 0.3s ease-in-out;
     }
     .option-btn:hover {
-      background-color: #d6e6f2;
+      background-color: #1abc9c;
+      border-color: #16a085;
     }
     .option-btn.correct {
-      background-color: #c6f6d5;
-      border-color: #38a169;
+      background-color: #27ae60;
+      border-color: #2ecc71;
     }
     .option-btn.incorrect {
-      background-color: #fed7d7;
-      border-color: #e53e3e;
+      background-color: #c0392b;
+      border-color: #e74c3c;
     }
     #navigation {
-      margin-top: 20px;
+      margin-top: 30px;
       display: flex;
       justify-content: space-between;
     }
+    #navigation button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #2980b9;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s ease-in-out;
+    }
+    #navigation button:hover {
+      background-color: #3498db;
+    }
     #result {
       font-weight: bold;
-      margin-top: 15px;
-      font-size: 18px;
+      margin-top: 20px;
+      font-size: 20px;
     }
     #result.correct {
-      color: #38a169;
+      color: #2ecc71;
     }
     #result.incorrect {
-      color: #e53e3e;
+      color: #e74c3c;
     }
     #question-number {
-      margin-bottom: 10px;
-      font-size: 18px;
-      color: #555;
+      margin-bottom: 15px;
+      font-size: 20px;
     }
     #celebration {
       display: none;
       text-align: center;
-      margin-top: 20px;
-      font-size: 22px;
-      color: #2b6cb0;
-      animation: pulse 1s infinite;
+      margin-top: 30px;
+      font-size: 24px;
+      color: #f1c40f;
+      animation: celebrationPulse 1.2s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    @keyframes celebrationPulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
@@ -89,7 +107,7 @@
       <button onclick="prevQuestion()">Previous</button>
       <button onclick="nextQuestion()">Next</button>
     </div>
-    <div id="celebration">🎉 Congratulations! You've completed the quiz! 🎉</div>
+    <div id="celebration">🎉 Congratulations! You completed all <span id="total-q"></span> questions! 🎉</div>
   </div>
 
   <script>
@@ -114,6 +132,7 @@
       const numberEl = document.getElementById("question-number");
       const resultEl = document.getElementById("result");
       const celebrationEl = document.getElementById("celebration");
+      const totalQ = document.getElementById("total-q");
 
       const q = questions[currentQuestion];
 
@@ -131,6 +150,8 @@
         btn.onclick = () => checkAnswer(btn, q.answer);
         optionsEl.appendChild(btn);
       });
+
+      totalQ.textContent = questions.length;
     }
 
     function checkAnswer(btn, correct) {
@@ -141,11 +162,11 @@
 
       if (btn.textContent === correct) {
         btn.classList.add("correct");
-        resultEl.textContent = "Correct! Well done.";
+        resultEl.textContent = "✅ Correct! Well done.";
         resultEl.className = "correct";
       } else {
         btn.classList.add("incorrect");
-        resultEl.textContent = `Incorrect. Correct answer: ${correct}`;
+        resultEl.textContent = `❌ Incorrect. Correct answer: ${correct}`;
         resultEl.className = "incorrect";
       }
     }
