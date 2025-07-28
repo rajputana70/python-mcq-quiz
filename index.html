@@ -141,6 +141,7 @@
     ];
 
     let currentQuestion = 0;
+    let userAnswers = [];
 
     function loadQuestion() {
       const questionEl = document.getElementById("question");
@@ -169,13 +170,15 @@
       if (btn.textContent === correct) {
         btn.classList.add("correct");
         document.getElementById("result").textContent = "✅ Correct!";
+        userAnswers[currentQuestion] = true;
       } else {
         btn.classList.add("incorrect");
-        document.getElementById("result").textContent = "❌ Incorrect!";
+        document.getElementById("result").textContent = `❌ Incorrect! Correct answer: ${correct}`;
+        userAnswers[currentQuestion] = false;
       }
 
       if (currentQuestion === questions.length - 1) {
-        document.getElementById("celebration").style.display = "block";
+        showFinalResults();
       }
     }
 
@@ -191,6 +194,12 @@
         currentQuestion--;
         loadQuestion();
       }
+    }
+
+    function showFinalResults() {
+      const correctCount = userAnswers.filter(ans => ans).length;
+      document.getElementById("celebration").style.display = "block";
+      document.getElementById("celebration").textContent += ` You got ${correctCount} out of ${questions.length} correct.`;
     }
 
     window.onload = loadQuestion;
