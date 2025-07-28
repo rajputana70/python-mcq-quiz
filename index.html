@@ -1,106 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Professional Python Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Quiz App</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
+      background: linear-gradient(to right, #2c3e50, #3498db);
       color: #fff;
-      margin: 0;
-      padding: 0;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
+      margin: 0;
     }
     .quiz-container {
-      background: #1c1c2b;
-      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.1);
       padding: 30px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-      max-width: 700px;
-      width: 90%;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
     }
     h2 {
       margin-bottom: 20px;
-      font-size: 24px;
     }
-    .question-count {
-      font-size: 18px;
-      color: #ffde59;
-      margin-bottom: 10px;
-    }
-    .option-btn {
-      background: #394867;
-      color: #fff;
-      border: none;
+    #options button {
+      display: block;
+      width: 100%;
       padding: 12px;
       margin: 10px 0;
-      border-radius: 8px;
-      width: 100%;
-      text-align: left;
-      transition: background 0.3s;
-      cursor: pointer;
-    }
-    .option-btn:hover {
-      background: #4f5d75;
-    }
-    .option-btn.correct {
-      background: #28a745;
-    }
-    .option-btn.incorrect {
-      background: #dc3545;
-    }
-    #navigation {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-    }
-    #navigation button {
-      background: #6c63ff;
+      font-size: 16px;
+      background: linear-gradient(to right, #00b09b, #96c93d);
       border: none;
-      padding: 10px 20px;
-      color: #fff;
-      border-radius: 6px;
+      color: white;
+      border-radius: 10px;
       cursor: pointer;
       transition: background 0.3s;
     }
-    #navigation button:hover {
-      background: #574fd6;
+    #options button:hover {
+      background: linear-gradient(to right, #96c93d, #00b09b);
+    }
+    .correct {
+      background-color: #2ecc71 !important;
+    }
+    .incorrect {
+      background-color: #e74c3c !important;
     }
     #result {
+      margin-top: 20px;
+      font-size: 18px;
       font-weight: bold;
-      margin-top: 15px;
     }
-    #celebration {
-      margin-top: 30px;
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .celebrate {
+      background: linear-gradient(to right, #f7971e, #ffd200);
+      color: black;
       padding: 20px;
-      border-radius: 12px;
-      font-size: 20px;
-      text-align: center;
-      animation: popin 0.6s ease-in-out forwards;
+      border-radius: 15px;
+      margin-top: 20px;
+      font-size: 22px;
+      animation: bounce 1s infinite alternate;
     }
-    @keyframes popin {
-      from { transform: scale(0.7); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
     }
   </style>
 </head>
 <body>
   <div class="quiz-container">
-    <div class="question-count" id="question-number"></div>
-    <h2 id="question"></h2>
+    <h2 id="question">Loading question...</h2>
     <div id="options"></div>
     <div id="result"></div>
-    <div id="celebration"></div>
-    <div id="navigation">
+    <div class="nav-buttons">
       <button onclick="prevQuestion()">Previous</button>
       <button onclick="nextQuestion()">Next</button>
     </div>
+    <div id="celebration" class="celebrate" style="display: none;">🎉 Congratulations! You've completed the quiz! 🎉</div>
   </div>
 
   <script>
@@ -116,19 +99,14 @@
         answer: "5"
       },
       {
-        question: "Which of these is a Python keyword?",
-        options: ["def", "define", "function", "fun"],
+        question: "Which keyword is used for function in Python?",
+        options: ["function", "fun", "def", "define"],
         answer: "def"
       },
       {
-        question: "What does the 'append()' method do?",
-        options: ["Adds item to end", "Removes item", "Sorts list", "Reverses list"],
-        answer: "Adds item to end"
-      },
-      {
-        question: "What is the output of [1,2,3] * 2?",
-        options: ["[1,2,3,1,2,3]", "[2,4,6]", "Error", "[1,2,3]*2"],
-        answer: "[1,2,3,1,2,3]"
+        question: "What is the output of [1, 2, 3] * 2?",
+        options: ["[1, 2, 3, 1, 2, 3]", "[2, 4, 6]", "Error", "[1, 2, 3, 2]"],
+        answer: "[1, 2, 3, 1, 2, 3]"
       },
       {
         question: "What method is used to sort a list in place?",
@@ -136,36 +114,42 @@
         answer: "sort()"
       },
       {
-        question: "Which data type is immutable?",
-        options: ["List", "Set", "Dictionary", "Tuple"],
-        answer: "Tuple"
+        question: "Which of the following is a Python tuple?",
+        options: ["[1,2,3]", "{1,2,3}", "(1,2,3)", "<1,2,3>"],
+        answer: "(1,2,3)"
       },
       {
-        question: "How do you create a function in Python?",
-        options: ["def function():", "create function():", "function() {}", "func function():"],
-        answer: "def function():"
+        question: "What does the // operator do in Python?",
+        options: ["Division", "Modulo", "Floor Division", "Exponentiation"],
+        answer: "Floor Division"
       },
       {
-        question: "Which of the following is a tuple?",
-        options: ["(1, 2, 3)", "[1, 2, 3]", "{1, 2, 3}", "<1, 2, 3>"],
-        answer: "(1, 2, 3)"
+        question: "What is the correct way to open a file in read mode?",
+        options: ["open('file.txt', 'r')", "open('file.txt', 'read')", "file.open('r')", "open.read('file.txt')"],
+        answer: "open('file.txt', 'r')"
       },
       {
-        question: "What does the 'break' keyword do in a loop?",
-        options: ["Exits the loop", "Skips the next iteration", "Restarts the loop", "Pauses the loop"],
-        answer: "Exits the loop"
+        question: "Which keyword is used to handle exceptions?",
+        options: ["try", "except", "final", "catch"],
+        answer: "except"
+      },
+      {
+        question: "What is the output of bool(0)?",
+        options: ["True", "False", "0", "Error"],
+        answer: "False"
       }
     ];
 
     let currentQuestion = 0;
 
     function loadQuestion() {
-      const q = questions[currentQuestion];
-      document.getElementById("question-number").textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
-      document.getElementById("question").textContent = q.question;
-
+      const questionEl = document.getElementById("question");
       const optionsEl = document.getElementById("options");
+      const q = questions[currentQuestion];
+
+      questionEl.textContent = `Question ${currentQuestion + 1} of ${questions.length}: ${q.question}`;
       optionsEl.innerHTML = "";
+
       q.options.forEach(option => {
         const btn = document.createElement("button");
         btn.className = "option-btn";
@@ -175,7 +159,7 @@
       });
 
       document.getElementById("result").textContent = "";
-      document.getElementById("celebration").textContent = "";
+      document.getElementById("celebration").style.display = "none";
     }
 
     function checkAnswer(btn, correct) {
@@ -185,14 +169,13 @@
       if (btn.textContent === correct) {
         btn.classList.add("correct");
         document.getElementById("result").textContent = "✅ Correct!";
-        document.getElementById("result").style.color = "#00ffae";
-        if (currentQuestion === questions.length - 1) {
-          document.getElementById("celebration").textContent = "🎉 Congratulations! You've completed the quiz! 🎉";
-        }
       } else {
         btn.classList.add("incorrect");
-        document.getElementById("result").textContent = "❌ Incorrect";
-        document.getElementById("result").style.color = "#ff6b6b";
+        document.getElementById("result").textContent = "❌ Incorrect!";
+      }
+
+      if (currentQuestion === questions.length - 1) {
+        document.getElementById("celebration").style.display = "block";
       }
     }
 
