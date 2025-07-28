@@ -6,39 +6,57 @@
   <title>Python Quiz</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px;
-      background-color: #f4f4f4;
+      background: linear-gradient(to right, #f2f2f2, #d9e2ec);
     }
     .quiz-container {
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     .option-btn {
       display: block;
       margin: 10px 0;
-      padding: 10px;
+      padding: 12px;
       width: 100%;
-      background-color: #e0e0e0;
-      border: none;
-      border-radius: 4px;
+      background-color: #f0f4f8;
+      border: 2px solid #cbd5e0;
+      border-radius: 6px;
       cursor: pointer;
       text-align: left;
+      font-size: 16px;
+      transition: all 0.2s ease-in-out;
+    }
+    .option-btn:hover {
+      background-color: #e2e8f0;
     }
     .option-btn.correct {
-      background-color: #a5d6a7;
+      background-color: #c6f6d5;
+      border-color: #38a169;
     }
     .option-btn.incorrect {
-      background-color: #ef9a9a;
+      background-color: #fed7d7;
+      border-color: #e53e3e;
     }
     #navigation {
       margin-top: 20px;
       display: flex;
       justify-content: space-between;
+    }
+    #result {
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 18px;
+    }
+    #result.correct {
+      color: #38a169;
+    }
+    #result.incorrect {
+      color: #e53e3e;
     }
   </style>
 </head>
@@ -54,7 +72,7 @@
   </div>
 
   <script>
-    const quizData = [
+    const questions = [
       {
         question: "What is the result of chr(65)?",
         options: ["A", "a", "65", "Error"],
@@ -112,7 +130,7 @@
     function loadQuestion() {
       const questionEl = document.getElementById("question");
       const optionsEl = document.getElementById("options");
-      const q = quizData[currentQuestion];
+      const q = questions[currentQuestion];
 
       questionEl.textContent = `${currentQuestion + 1}. ${q.question}`;
       optionsEl.innerHTML = "";
@@ -126,23 +144,28 @@
       });
 
       document.getElementById("result").textContent = "";
+      document.getElementById("result").className = "";
     }
 
     function checkAnswer(btn, correct) {
       const options = document.querySelectorAll(".option-btn");
       options.forEach(o => o.disabled = true);
 
+      const resultEl = document.getElementById("result");
+
       if (btn.textContent === correct) {
         btn.classList.add("correct");
-        document.getElementById("result").textContent = "Correct!";
+        resultEl.textContent = "Correct! Well done.";
+        resultEl.className = "correct";
       } else {
         btn.classList.add("incorrect");
-        document.getElementById("result").textContent = "Incorrect!";
+        resultEl.textContent = `Incorrect. Correct answer: ${correct}`;
+        resultEl.className = "incorrect";
       }
     }
 
     function nextQuestion() {
-      if (currentQuestion < quizData.length - 1) {
+      if (currentQuestion < questions.length - 1) {
         currentQuestion++;
         loadQuestion();
       }
